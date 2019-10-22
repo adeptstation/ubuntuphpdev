@@ -57,7 +57,7 @@ VOLUME /var/log/apache2
 VOLUME /var/log/mysql
 VOLUME /etc/apache2
 
-EXPOSE 80
+EXPOSE 80 3306
 
 COPY init.sh /home/init.sh
 RUN chmod u+x /home/init.sh
