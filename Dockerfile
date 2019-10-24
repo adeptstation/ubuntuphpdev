@@ -4,10 +4,11 @@ ENV DEBIAN_FRONTEND=noninteractive
 ENV LOG_LEVEL warn
 ENV ALLOW_OVERRIDE All
 ENV DATE_TIMEZONE UTC
-ENV PHP_V=7.2
+ENV PHP_V=7.3
 ENV PMA_V=4.9.1
 
-RUN apt-get update \
+RUN add-apt-repository ppa:ondrej/php \
+    && apt-get update \
     && apt-get upgrade -y
 
 # basic libraries
@@ -25,7 +26,26 @@ RUN apt install mysql-server -y \
     && mysql -u root -e "FLUSH PRIVILEGES;"
 
 # php install
-RUN apt install -y php libapache2-mod-php php-common php-mbstring php-gettext php-mysql php-curl php-gd php-cli php-opcache php-xdebug php-zip php7.1-mcrypt
+RUN apt install -y php${PHP_V} libapache2-mod-php${PHP_V} \
+    php${PHP_V}-cli \
+    php${PHP_V}-common \
+    php${PHP_V}-fpm \
+    php${PHP_V}-json \
+    php${PHP_V}-pdo \
+    php${PHP_V}-mbstring \
+    php${PHP_V}-gettext \
+    php${PHP_V}-mysql \
+    php${PHP_V}-curl \
+    php${PHP_V}-gd \
+    php${PHP_V}-opcache \
+    php${PHP_V}-xdebug \
+    php${PHP_V}-zip \
+    php${PHP_V}-xml \
+    php${PHP_V}-xmlrpc \
+    php${PHP_V}-bcmath \
+    php${PHP_V}-imagick \
+    php${PHP_V}-dev \
+    php7.1-mcrypt
 
 #php mcrypt for older applications
 RUN ln -s /etc/php/7.1/mods-available/mcrypt.ini /etc/php/${PHP_V}/mods-available/ && \
