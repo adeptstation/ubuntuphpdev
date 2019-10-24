@@ -25,12 +25,16 @@ RUN apt install mysql-server -y \
     && mysql -u root -e "FLUSH PRIVILEGES;"
 
 # php install
-RUN apt install -y php libapache2-mod-php php-mbstring php-gettext php-mysql php-curl
+RUN apt install -y php libapache2-mod-php php-common php-mbstring php-gettext php-mysql php-curl php-gd php-cli php-opcache php-xdebug php-zip php7.1-mcrypt
+
+#php mcrypt for older applications
+RUN ln -s /etc/php/7.1/mods-available/mcrypt.ini /etc/php/${PHP_V}/mods-available/ && \
+    phpenmod mcrypt
 
 #composer install
 RUN curl -sS https://getcomposer.org/installer | php
 
-# latest phpmyadmin
+# install latest phpmyadmin
 WORKDIR /tmp
 RUN wget https://files.phpmyadmin.net/phpMyAdmin/${PMA_V}/phpMyAdmin-${PMA_V}-english.tar.gz
 RUN tar xvf phpMyAdmin-${PMA_V}-english.tar.gz \
@@ -46,6 +50,8 @@ RUN tar xvf phpMyAdmin-${PMA_V}-english.tar.gz \
 
 COPY phpmyadmin.conf /etc/apache2/conf-enabled/phpmyadmin.conf
 
+WORKDIR /
+
 #permissions
 RUN chown -R www-data:www-data /var/www/html \
     && chown -R mysql:mysql /var/lib/mysql \
@@ -53,9 +59,6 @@ RUN chown -R www-data:www-data /var/www/html \
 
 VOLUME /var/www/html
 VOLUME /var/lib/mysql
-VOLUME /var/log/apache2
-VOLUME /var/log/mysql
-VOLUME /etc/apache2
 
 EXPOSE 80 3306
 
