@@ -7,9 +7,11 @@ ENV DATE_TIMEZONE UTC
 ENV PHP_V=7.3
 ENV PMA_V=4.9.1
 
-RUN add-apt-repository ppa:ondrej/php \
-    && apt-get update \
-    && apt-get upgrade -y
+RUN apt update \
+    && apt install -y software-properties-common \
+    && add-apt-repository ppa:ondrej/php \
+    && apt update \
+    && apt upgrade -y
 
 # basic libraries
 RUN apt install -y curl wget zip unzip nano git
@@ -50,6 +52,11 @@ RUN apt install -y php${PHP_V} libapache2-mod-php${PHP_V} \
 #php mcrypt for older applications
 RUN ln -s /etc/php/7.1/mods-available/mcrypt.ini /etc/php/${PHP_V}/mods-available/ && \
     phpenmod mcrypt
+
+#php.ini configurations
+RUN sed -i "s/upload_max_filesize = 2M/upload_max_filesize = 100M/g" /etc/php/${PHP_V}/apache2/php.ini \
+    && sed -i "s/post_max_size = 8M/post_max_size = 100M/g" /etc/php/${PHP_V}/apache2/php.ini \
+    && sed -i "s/memory_limit = 128M/memory_limit = 512M/g" /etc/php/${PHP_V}/apache2/php.ini
 
 #composer install
 RUN curl -sS https://getcomposer.org/installer | php
