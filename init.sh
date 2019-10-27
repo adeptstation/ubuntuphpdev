@@ -1,5 +1,8 @@
 #!/bin/sh
 
+rm -rf /var/lib/mysql/*
+mysqld --initialize-insecure 
+
 # start mysql
 /etc/init.d/mysql start
 # exec mysqld_safe

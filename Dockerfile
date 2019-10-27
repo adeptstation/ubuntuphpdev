@@ -46,12 +46,12 @@ RUN apt install -y php${PHP_V} libapache2-mod-php${PHP_V} \
     php${PHP_V}-xmlrpc \
     php${PHP_V}-bcmath \
     php${PHP_V}-imagick \
-    php${PHP_V}-dev \
-    php7.1-mcrypt
+    php${PHP_V}-dev 
+    # php7.1-mcrypt
 
 #php mcrypt for older applications
-RUN ln -s /etc/php/7.1/mods-available/mcrypt.ini /etc/php/${PHP_V}/mods-available/ && \
-    phpenmod mcrypt
+# RUN ln -s /etc/php/7.1/mods-available/mcrypt.ini /etc/php/${PHP_V}/mods-available/ && \
+#     phpenmod mcrypt
 
 #php.ini configurations
 RUN sed -i "s/upload_max_filesize = 2M/upload_max_filesize = 100M/g" /etc/php/${PHP_V}/apache2/php.ini \
