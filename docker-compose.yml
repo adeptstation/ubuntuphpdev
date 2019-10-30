@@ -1,0 +1,15 @@
+version: "3"
+
+services:
+  localhost:
+    image: teamadeptstation/ubuntuphpdev
+    restart: 'always'
+    ports:
+      - '80:80'
+    volumes: 
+      - ./www:/var/www/html
+      - ./data/mysql:/var/lib/mysql
+      - ./config/apache:/etc/apache2
+      - ./config/php:/etc/php
+      - ./logs/apache:/var/log/apache2
+      - ./logs/mysql:/var/log/mysql

@@ -7,10 +7,10 @@ ENV DATE_TIMEZONE UTC
 ENV PHP_V=7.3
 ENV PMA_V=4.9.1
 
-RUN apt update \
-    && apt install -y software-properties-common \
+RUN apt update -y \
+    && apt install -y software-properties-common apt-utils \
     && add-apt-repository ppa:ondrej/php \
-    && apt update \
+    && apt update -y \
     && apt upgrade -y
 
 # basic libraries
@@ -25,7 +25,7 @@ RUN apt install -y apache2 \
 RUN apt install mysql-server -y \
     && /etc/init.d/mysql start \
     && mysql -u root -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '';" \
-    && mysql -u root -e "FLUSH PRIVILEGES;"
+    && mysql -u root -e "FLUSH PRIVILEGES;" 
 
 # php install
 RUN apt install -y php${PHP_V} libapache2-mod-php${PHP_V} \
@@ -84,12 +84,12 @@ RUN chown -R www-data:www-data /var/www/html \
     && chown -R mysql:mysql /var/lib/mysql \
     && chown -R www-data:www-data /var/lib/phpmyadmin
 
-VOLUME /var/www/html
-VOLUME /var/lib/mysql
+VOLUME ["/var/www/html","/var/lib/mysql","/etc/php","/etc/apache2","/var/log/apache2","/var/log/mysql"]
 
-EXPOSE 80 3306
+EXPOSE 80
 
 COPY init.sh /home/init.sh
-RUN chmod u+x /home/init.sh
+COPY mysql.sh /home/mysql.sh
+RUN chmod u+x /home/init.sh /home/mysql.sh
 
 ENTRYPOINT [ "/home/init.sh" ]
