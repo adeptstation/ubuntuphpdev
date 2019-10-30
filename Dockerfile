@@ -84,7 +84,7 @@ RUN chown -R www-data:www-data /var/www/html \
     && chown -R mysql:mysql /var/lib/mysql \
     && chown -R www-data:www-data /var/lib/phpmyadmin
 
-VOLUME ["/var/www/html","/var/lib/mysql","/etc/php","/etc/apache2","/var/log/apache2","/var/log/mysql"]
+VOLUME ["/var/www/html","/var/lib/mysql","/var/log/apache2","/var/log/mysql"]
 
 EXPOSE 80
 
