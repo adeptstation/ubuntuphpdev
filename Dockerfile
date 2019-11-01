@@ -19,7 +19,10 @@ RUN apt install -y curl wget zip unzip nano git
 # apache install
 RUN apt install -y apache2 \
     && echo "ServerName localhost" >> /etc/apache2/apache2.conf \
-    && a2enmod rewrite
+    && a2enmod rewrite \
+    && rm /etc/apache2/sites-enabled/000-default.conf
+
+COPY 000-default.conf /etc/apache2/sites-enabled/000-default.conf
 
 # mysql install
 RUN apt install mysql-server -y \
